@@ -1,0 +1,104 @@
+#!/bin/sh
+
+# FUNCTION to flash the USB LED if an interface is enabled but offline.
+set_USB_LED()
+{
+  offline=0
+
+  # count amount of offline ifaces among enabled ones
+  for i in 1 2 3 4 5 6
+  do
+    enabled=$(uci get mwan3.UMTS$i.enabled)
+    if [ "$enabled" -eq 1 ]; then
+      status=$(uci get mwan3.UMTS$i.offline)
+      offline=$((offline+status))
+    fi
+  done
+
+  if [ "$offline" -eq 0 ]; then
+    # no device offline => stop USB LED flashing
+    echo none > /sys/devices/platform/leds-gpio/leds/d-link:blue:usb/trigger
+  else
+    # continue/start flashing
+    echo timer > /sys/devices/platform/leds-gpio/leds/d-link:blue:usb/trigger
+    echo "250" > /sys/devices/platform/leds-gpio/leds/d-link:blue:usb/delay_on
+    echo "250" > /sys/devices/platform/leds-gpio/leds/d-link:blue:usb/delay_off
+  fi
+}
+
+
+# FUNCTION to toogle a specific WAN usb port wth the uhubctl-tool.
+reanimate_WAN()
+{
+  retryIface=$(uci get mwan3.$INTERFACE.retryAttempt)
+  retryMax=$(uci get mwan3.config.retryMax)
+
+  # check whether to try to reanimate the interface
+  if [ "$retryIface" -ne "$retryMax" ]; then
+
+    # extract portnumber of interface which called the script
+    # (it's the number behind 'UMTS')
+    port=$(echo "$INTERFACE" | sed 's/UMTS*//')
+
+    # increment the retry-variable for that interface
+    retryIface=$((retryIface+1))
+    uci set mwan3.$INTERFACE.retryAttempt=$retryIface
+    uci commit mwan3
+
+    logger -t mwan3 "resetting $INTERFACE, try $retryIface/$retryMax. Reason: went down."
+
+    # perform the actual reset
+    /root/scripts/mwan/dongleReset $port
+
+  else
+
+    logger -t mwan3 "$INTERFACE: Maximum retries of mwan3.$retryMax reached."
+    logger -t mwan3 "Hint: Perform router reboot to reset retry attempts."
+
+  fi
+}
+
+#ENTRYPOINT for the script
+
+# See, whether the triggering interface has option "enabled=1". May change
+# behaviour of WAN LED and if the event was triggered by an UMTS*-interface,
+# set USB LED and, if device went down, may try to reanimate it.
+
+# the whole script performs over enabled interfaces only
+enabled=$(uci get mwan3.$INTERFACE.enabled)
+if [ "$enabled" -eq 1 ]; then
+
+  # set WAN LED according to amount of on-/offline ifaces
+  /root/scripts/mwan/set_WAN_LED
+
+  # do the following only for an UMTS*-interface, i.e. wan on eth*
+  # is ignored, since nor reset the wan connection reasonably
+  if ( echo "$INTERFACE" | grep -q "UMTS.*" ); then
+                                                    
+    case "$ACTION" in
+             
+        ifup)                 
+        # An interface came up. Change it's status and set USB LED accordingly:
+
+             uci set mwan3.$INTERFACE.offline=0 # set that the device is up now               
+             uci commit mwan3
+             set_USB_LED
+             ;;
+
+      ifdown)
+        # An interface went down. Let USB LED flash and try to reanimate the iface.
+        # Interface will only be reanimated if max attempts not reached jet.
+             uci set mwan3.$INTERFACE.offline=1 #set interface's status to 'offline'
+             uci commit mwan3
+
+             set_USB_LED # set USB LED (will blink afterwards)
+
+             reanimate_WAN # reset interface by toogling usb-port off/on
+             ;;
+    esac
+
+  fi
+
+fi
+
+exit 0
