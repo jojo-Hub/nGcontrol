@@ -4,7 +4,7 @@ openWRT package to have an overview and basic control about connected UMTS/GSM/L
 Since sometimes, the dongles do not respond anymore, the mwan3-control script was customised to "auto-reanimate" the dongle. The maximum number of such retry attempts may be configured.
 To allow an one-to-one mapping between UMTS dongle, USB port and available interface, udev is used. This way you can use multiple SIM cards with certain billing plans and control their usage manually (or automatically via crontab).  
 
-
+The web interface supports an auto-refreshing view but this feature is not implemented yet.
 
 Right now, the version is just very basic, as just one model of huawei dongles is supported so far. Since the may have all the same API, it should be no problem to add other huawei dongles.
 
