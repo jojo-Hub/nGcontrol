@@ -1,0 +1,9 @@
+#!/bin/sh
+
+  uhubctl -a on -p ${1}
+  logger -t UMTS "UMTS${1} has been turned on"
+
+  # ifup UMTS${1} will be executed due to udev rule
+  # at the right time. Thus, not mentioned here.
+
+exit 0
