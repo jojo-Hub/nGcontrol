@@ -1,0 +1,41 @@
+#!/bin/sh /etc/rc.common
+#Init script for udevd
+# do not forget to enable with "/etc/init.d/udev enable"
+
+START=30
+
+
+start() {
+
+  /bin/uhubctl -a off	#turn off usb hub
+
+  for i in 1 2 3 4 5 6
+  do
+    ubus call network.interface.UMTS$i remove #remove may created UMTS1,2... instances
+    ubus call network.interface.eth$((i+1)) remove #remove may created eth2,3... instances
+    uci set mwan3.UMTS$i.retryAttempt=0   #reset retryAttempts
+    uci set mwan3.UMTS$i.offline=0        #reset offline status
+
+  done
+
+  uci commit mwan3	#write changes to configuration
+
+  /sbin/udevd --daemon &	# start udev
+  sleep 2
+  modprobe cdc_ether		# load cdc_ether driver after udev is listening now
+  sleep 2
+
+  for i in 1 2 3 4 5 6
+  do
+    if [ "$(uci get mwan3.UMTS$i.enabled)" -eq 1 ]; then	#if interface is set to enabled
+      /root/scripts/mwan/dongleOn $i				#enable it
+      sleep 1
+    fi
+  done
+
+}
+
+stop() {
+    killall udevd
+    rmmod cdc_ether
+}
