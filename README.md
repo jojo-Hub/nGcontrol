@@ -1,5 +1,5 @@
 # nGcontrol
-openWRT package to have an overview and basic control about connected UMTS/GSM/LTE USB-dongles. The web interface gives an overview of certain connection parameters as well as provides some basic control to Stop, Start or restart a dongle. See attached screen shot for an example providing all three states of information.
+openWRT package to have an overview and basic control about connected UMTS/GSM/LTE USB-dongles. The web interface gives an overview of certain connection parameters as well as provides some basic control to Stop, Start or Restart a dongle. See attached screen shot for an example providing all three states of information.
 
 Since sometimes, the dongles do not respond anymore, the mwan3-custom script was modified to "auto-reanimate" the dongle (i.e. turn it off and on physically). The maximum number of such retry attempts can be configured. Also, this script changes the behaviour of the WAN and USB LED of a D-Link DIR-825 router (should be quite customizable for any router).
 
@@ -37,5 +37,6 @@ Some considerations for future versions:
   - If a certain traffic limit or configured date is approached, the router sends a SMS to a (list of) phone number(s). Similarly, still working dongles may inform about failures (such as max retry reached, dongle down all the time, etc.).
   - Allow to configure various dongle models (requires appropriate API) and create an config-page where you can chose the model. Also, modify the scripts to use a dynamic number of dongled (not at maximum 6 as nowadays).
   - Create a config page where the additional mwan3 parameters (retryMax, retryAttempt per interface) can be configured.
+  - Create an log-page similar to mwan3-overview where the last (50) nGcontrol associated logs are show.
   - implement an auto-refresh function similar to the openWRT status overview page.
   - move the scripts from /root/scripts to a proper location, e.g. /usr/share/nGcontrol.
