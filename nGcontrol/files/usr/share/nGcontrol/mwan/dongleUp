@@ -1,0 +1,6 @@
+#!/bin/sh
+{
+  ifup UMTS${1}
+  logger -t nGctrl "UMTS${1} should be up now..."
+  exit 0
+} &
