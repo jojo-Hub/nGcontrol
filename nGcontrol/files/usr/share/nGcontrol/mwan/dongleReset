@@ -1,0 +1,11 @@
+#reset a dongle: combination of off- and on-scripts with
+#a short time to relax.
+#!/bin/sh
+
+  /usr/share/nGcontrol/mwan/dongleOff ${1}
+  sleep 2
+  /usr/share/nGcontrol/mwan/dongleOn ${1}
+
+  logger -t nGctrl "UMTS${1} has been reset"
+
+  exit 0
