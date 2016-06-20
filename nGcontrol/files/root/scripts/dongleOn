@@ -1,8 +1,0 @@
-#!/bin/sh
-
-  uci set mwan3.UMTS${1}.enabled=1  #set mwan3 config to use dongle
-  uci commit mwan3
-
-  /root/scripts/mwan/dongleOn ${1}
-
-exit 0
