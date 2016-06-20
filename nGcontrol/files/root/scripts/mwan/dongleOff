@@ -1,7 +1,0 @@
-#!/bin/sh
-
-  ubus call network.interface.UMTS${1} remove
-  uhubctl -a off -p ${1}
-  logger -t UMTS "UMTS${1} has been turned off"
-
-exit 0
