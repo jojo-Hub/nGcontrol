@@ -1,0 +1,9 @@
+#!/bin/sh
+
+  uhubctl -a on -p ${1} #turn off USB hub port
+  logger -t nGctrl "UMTS${1} has been turned on" #write a message to syslog
+
+  # ifup UMTS${1} will be executed due to udev rule
+  # at the right time. Thus, not mentioned here.
+
+  exit 0
