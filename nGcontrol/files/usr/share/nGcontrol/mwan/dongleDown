@@ -1,0 +1,6 @@
+#!/bin/sh
+{
+  ubus call network.interface.UMTS${1} remove
+  logger -t nGctrl "UMTS${1} has been removed"
+exit 0
+} &
