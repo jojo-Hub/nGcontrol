@@ -1,9 +1,0 @@
-#!/bin/sh
-
-  /root/scripts/mwan/dongleOff ${1}
-  sleep 5
-  /root/scripts/mwan/dongleOn ${1}
-
-  logger -t UMTS "UMTS${1} has been reset"
-
-exit 0
