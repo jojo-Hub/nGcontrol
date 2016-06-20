@@ -1,8 +1,0 @@
-#!/bin/sh
-{
-
-ifup UMTS${1}
-logger -t UMTS "UMTS${1} should be up now..."
-
-exit 0
-} &
