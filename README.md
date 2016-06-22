@@ -26,8 +26,7 @@ Prerequisites:
 
 The software depencies can be installed with
 
- `# opkg update`
- `# opkg install kmod-usb-net-cdc-ether usb-modeswitch kmod-usb2 udev mwan3-luci`
+ `# opkg update && opkg install kmod-usb-net-cdc-ether usb-modeswitch kmod-usb2 udev mwan3-luci`
  
 Please note that udev needs to be [enabled](https://forum.openwrt.org/viewtopic.php?pid=135961#p135961) and some parameters have been added to /etc/config/{network, mwan, firewall}, see the corresponding example files.
 
