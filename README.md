@@ -30,12 +30,12 @@ Some information about the environment:
   - WAN IP is from an 192.168.0.0/24 subnet
   - every UMTS dongle has the fix IP 192.168.x.1/24, where x denodes the USB port number, the dongle is plugged in to
   - on the routers side, the UMTS' emulated LAN connecton has the IP 192.168.x.2
-  - the routers' LAN-bridge (i.e. local network) has the subnet 172.16.0.0./16. The only limitation for the LAN IP address range is that it must not equal any of the gateways' subnets.
+  - the routers' LAN-bridge (i.e. local network) has the subnet 172.16.0.0./16. The only limitation for the LAN IP address range (and any private WAN range (e.g. if the router is behind another router)) is that it must not equal any of the gateways' subnets, i.e. it may be 192.168.y.0/24 where y>6.
 
 
 Some considerations for future versions:
   - If a certain traffic limit or configured date is approached, the router sends a SMS to a (list of) phone number(s). Similarly, still working dongles may inform about failures (such as max retry reached, dongle down all the time, etc.).
-  - Allow to configure various dongle models (requires appropriate API) and create an config-page where you can chose the model. Also, modify the scripts to use a dynamic number of dongled (not at maximum 6 as nowadays).
+  - Allow to configure various dongle models (requires appropriate API) and create an config-page where you can chose the model. Also, modify the scripts to use a dynamic number of dongles (not at maximum 6 as nowadays).
   - Create a config page where the additional mwan3 parameters (retryMax, retryAttempt per interface) can be configured.
   - Create an log-page similar to mwan3-overview where the last (50) nGcontrol associated logs are shown.
   - Implement an auto-refresh function similar to the openWRT status overview page.
