@@ -11,15 +11,15 @@ end
 
 function _statusChange(action, interface)
 
-	os.execute("logger -t mwan3 'user requested to "..action.." UMTS"..interface.."'")
+	os.execute("logger -t nGctrl 'user requested to "..action.." UMTS"..interface.."'")
 
         if action == 'Disable' then
-          os.execute("/root/scripts/dongleOff "..interface)
+          os.execute("/usr/share/nGcontrol/dongleOff "..interface)
         elseif action == 'Enable' then
-          os.execute("/root/scripts/dongleOn "..interface)
-          os.execute("/root/scripts/mwan/dongleReset "..interface)
+          os.execute("/usr/share/nGcontrol/dongleOn "..interface)
+          os.execute("/usr/share/nGcontrol/mwan/dongleReset "..interface)
         else   
-          os.execute("/root/scripts/mwan/dongleReset "..interface)
+          os.execute("/usr/share/nGcontrol/mwan/dongleReset "..interface)
         end
 end
 
