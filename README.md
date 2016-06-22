@@ -20,8 +20,14 @@ Hint: It is much easier to use dongles with highLink capabilitiy (i.e. they emul
 Prerequisites: 
   - lua socket lib
   - mwan3 package
+  - udev
   - USB hub which supports per-port power switching (PPPS) and uhubctl, compiled for openWRT (see SDK) *)
   - router with at least one free USB port and openWRT
+
+The software depencies can be installed with
+  $opkg update
+  $ opkg install kmod-usb-net-cdc-ether usb-modeswitch kmod-usb2 udev mwan3-luci
+Please note that udev needs to be [enabled](https://forum.openwrt.org/viewtopic.php?pid=135961#p135961) and some parameters have been added to /etc/config/{network, mwan, firewall}, see the corresponding example files.
 
 
 *) It is planned to design an own PPPS functionality as an adapter to use any USB hub.
