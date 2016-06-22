@@ -17,9 +17,9 @@ function _statusChange(action, interface)
           os.execute("/usr/share/nGcontrol/dongleOff "..interface)
         elseif action == 'Enable' then
           os.execute("/usr/share/nGcontrol/dongleOn "..interface)
-          os.execute("/usr/share/nGcontrol/mwan/dongleReset "..interface)
+          os.execute("/usr/share/nGcontrol/mwan/dongleRestart "..interface)
         else   
-          os.execute("/usr/share/nGcontrol/mwan/dongleReset "..interface)
+          os.execute("/usr/share/nGcontrol/mwan/dongleRestart "..interface)
         end
 end
 
