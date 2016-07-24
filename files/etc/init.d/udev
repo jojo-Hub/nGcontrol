@@ -28,7 +28,7 @@ start() {
   for i in 1 2 3 4 5 6
   do
     if [ "$(uci get mwan3.UMTS$i.enabled)" -eq 1 ]; then	#if interface is set to enabled
-      /root/scripts/mwan/dongleOn $i				#enable it
+      /usr/share/nGcontrol/dongleOn $i				            #enable it
       sleep 1
     fi
   done
