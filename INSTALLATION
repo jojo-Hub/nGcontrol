@@ -1,0 +1,10 @@
+git install and pull request or copy files to dirs.
+open /ec/config/mwan3_config and set 'enabled' flag for desired interfaces
+may modify /etc/config/{network, firewall} accordingly.
+
+place own WAN LED script, or may insert exit 0 at the beginning of 
+/usr/share/nGcontrol/mwan/set_WAN_LED
+
+chmod +x /etc/hotplug.d/iface/16-mwancustom
+chmod +x /usr/share/nGcontrol/mwan/*
+mwan3 start
