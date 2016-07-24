@@ -7,4 +7,5 @@ place own WAN LED script, or may insert exit 0 at the beginning of
 
 chmod +x /etc/hotplug.d/iface/16-mwancustom
 chmod +x /usr/share/nGcontrol/*
+chmod +x /etc/init.d/udev
 mwan3 start
