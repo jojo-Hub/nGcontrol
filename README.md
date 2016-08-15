@@ -14,7 +14,7 @@ Also, only up to six dongles can be used right now. This is more a practical mat
 So far, the following USB dongles are supported:
   - Huawei 3372h
 
-Hint: It is much easier to use dongles with highLink capabilitiy (i.e. they emulate a LAN interface and appeare as eth* on the router). nGcontrol uses these kind of dongles. For the huawei sticks to be accessible, you need to inserd a SIM card. For testing, you may also use a deactivated one. It is recommended to deactivate the PIN, otherwise an API function must enter the pin after every dongle's reboot (which is not implemented yet).
+Hint: It is much easier to use dongles with highLink capabilitiy (i.e. they emulate an ethernet interface and appeare as eth* on the router). nGcontrol uses these kind of dongles. For the huawei sticks to be accessible, you need to insert a SIM card. For testing, you may also use a deactivated one. It is recommended to deactivate the PIN, otherwise an API function must enter the pin after every dongle's reboot (which is not implemented yet).
   
 
 Prerequisites: 
