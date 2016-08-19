@@ -214,9 +214,10 @@ function toTimeFormat(time)
 {
 //  var time = parseInt(this, 10); // don't forget the second param
   var days = Math.floor(time/86400);
-  var hrs  = Math.floor(time/3600);
-  var mins = Math.floor(time/60 - (hrs*60));
-  var secs = time%60;
+  var hrs  = Math.floor((time/3600) % 24);
+  var mins = Math.floor((time/60) % 60);
+  var secs = Math.floor(time%60);
+
 
   if (days == 0)
   {      
