@@ -1,7 +1,7 @@
 --- use to retrive connection details from an Huawei 3372h dongle
 --  tested to work on debian 8 and openWRT CC
 --
---  Version 1.1.1
+--  Version 1.2.1
 --
 --  Requirements: lua and luasocket
 --    $ sudo apt-get install lua luasocket         #debian
@@ -110,11 +110,26 @@ end
 -- helper to send a general query to IP/path, SesTok needed for getting
 -- values, SesTok is obtained by sendQuery(IP, "/api/webserver/SesTokInfo")
 -- and has to be split into SesInfo and TokInfo with xmlParse afterwards.
-local function sendQuery (IP, path, SesTok)
+--
+-- If request is not provided, a regular GET is made, POST otherwise.
+-- The POST-request will beprefixed with an XML-command so that only
+-- the actual request has to be provided.
+local function sendQuery (IP, path, SesTok, request)
   local payload = require("socket.http")
   local ltn12 = require("ltn12")
   local header = {}
   local result_table = {}
+  local URL = "http://"..IP..path
+  local _method = nil
+
+  if (request == nil) then
+    _method = "GET"
+    request = ""
+  else
+    _method = "POST"
+    request = "<?xml version='1.0' encoding='utf-8' ?>"..request
+  end
+
 
   if ( SesTok == nil) then
     header = {
@@ -126,17 +141,21 @@ local function sendQuery (IP, path, SesTok)
                ["Content-Type"] = "text/xml",
                ["USER-AGENT"] = "uPNP/1.0",
                ["Cookie"] = SesTok[1],
-               ["__RequestVerificationToken"] = SesTok[2]
+               ["__RequestVerificationToken"] = SesTok[2],
+               ["content-length"] = string.len(request)
              }
   end
 
-  payload.request {
-    url="http://"..IP..path,
-    sink = ltn12.sink.table(result_table),
-    headers = header
+  payload.request{
+    url = URL,
+    method = _method,
+    headers = header,
+    source = ltn12.source.string(request),
+    sink = ltn12.sink.table(result_table)
   }
 
   return table.concat(result_table)
+
 end
 
 -- *******************************
