@@ -218,4 +218,18 @@ function huaweiLib.queryStatus(IPAddr)
 
 end
 
+
+-- function to reset a dongle's traffic statistics
+function huaweiLib.resetTrafficStatistics(IPAddr)
+
+  SesTokInfo = sendQuery(IPAddr, "/api/webserver/SesTokInfo")
+  SesTok = {}
+  SesTok[1] = xmlParse(SesTokInfo, "SesInfo")
+  SesTok[2] = xmlParse(SesTokInfo, "TokInfo")
+
+  sendQuery (IPAddr, "/api/monitoring/clear-traffic", SesTok, "<request><ClearTraffic>1</ClearTraffic></request>")
+
+end 
+
+
 return huaweiLib
