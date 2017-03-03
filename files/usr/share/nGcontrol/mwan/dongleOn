@@ -1,6 +1,7 @@
 #!/bin/sh
 
-  uhubctl -a on -p ${1} #turn off USB hub port
+#  uhubctl -a on -p ${1} #turn on USB hub port
+  echo 1 > /sys/class/gpio/gpio2${1}/value
   logger -t nGctrl "UMTS${1} has been turned on" #write a message to syslog
 
   # ifup UMTS${1} will be executed due to udev rule
