@@ -1,7 +1,8 @@
 #!/bin/sh
 
   ubus call network.interface.UMTS${1} remove  #shall be the same as in dongleDown
-  uhubctl -a off -p ${1} #turn off port on USB hub port
+#  uhubctl -a off -p ${1} #turn off port on USB hub port
+  echo 0 > /sys/class/gpio/gpio2${1}/value
   logger -t nGctrl "UMTS${1} has been turned off" #write a message to syslog
   
   exit 0
