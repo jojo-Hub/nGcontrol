@@ -1,0 +1,87 @@
+#!/bin/sh /etc/rc.common
+# Script to export an i2c-GPIO expander's GPIO's to
+# /usr/share/nGcontrol/gpio/UMTS1...$maxUMTSDevices
+#
+# modify according to your expander and devices you want to connect
+
+START=90
+STOP=15
+
+maxUMTSDevices=6
+GPIOExpanderName="pcf8574"
+GPIOExpanderIICAddress=0x38
+IICBusNumber=0
+
+
+boot() {
+
+  if ! [ -e /dev/i2c-$IICBusNumber ]; then
+    echo "ERROR: /dev/i2c-$IICBusNumber not found!"
+    exit 1
+  fi
+
+  if [ $(i2cdetect -y 0 | grep -ce '38') -ne 1 ]; then
+    echo "ERROR: no device at $GPIOExpanderIICAddress on i2c-$IICBusNumber"
+    exit 1
+  fi
+
+  #register the gpio expander for sysfs-gpio
+    echo $GPIOExpanderName $GPIOExpanderIICAddress > /sys/bus/i2c/devices/i2c-$IICBusNumber/new_device
+    sleep 0.5
+
+  #export the P0...Px on the expander as GPIO and set their direction to out
+  #create links to address the GPIOs under /usr/share/nGcontrol/gpio/UMTS*
+    echo "exporting GPIOs to /usr/share/nGcontrol/gpio/UMTS* ..."
+    sysfsPath="/sys/class/gpio/gpiochip*"
+    for i in $sysfsPath; do
+      if [ $(cat $i/label) == "$GPIOExpanderName" ]; then
+
+        maxDevs=$(cat $i/ngpio)
+        if [ "$maxUMTSDevices" -gt "$maxDevs" ]; then
+          echo "ERROR: you specified $maxUMTSDevices, but the $GPIOExpanderName has only $maxDevs GPIOs."
+          exit 1
+        fi
+
+        GPIObase=$(cat $i/base)
+        range=$( seq $GPIObase $( expr $GPIObase + $maxUMTSDevices - 1 ) )
+        for j in $range; do
+          echo $j > /sys/class/gpio/export
+          echo "out" > /sys/class/gpio/gpio$j/direction
+          echo 1 > /sys/class/gpio/gpio$j/value
+          id=$( expr $j - $GPIObase + 1 )
+         ln -s /sys/class/gpio/gpio$j/ /usr/share/nGcontrol/gpio/UMTS$id
+        done
+        exit 0
+
+      fi
+    done
+
+    echo "ERROR: did not found '$GPIOExpanderName' at $GPIOExpanderIICAddress on /dev/i2c-$IICBusNumber"
+
+    exit 1
+}
+
+stop() {
+
+    echo "removing /usr/share/nGcontrol/gpio/UMTS* ..." 
+    rm /usr/share/nGcontrol/gpio/UMTS*
+
+    echo "unexport expander's GPIOs ..."
+    sysfsPath="/sys/class/gpio/gpiochip*"
+    for i in $sysfsPath; do
+      if [ $(cat $i/label) == "$GPIOExpanderName" ]; then
+        GPIObase=$(cat $i/base)
+        range=$( seq $GPIObase $( expr $GPIObase + $maxUMTSDevices - 1 ) )
+        for j in $range; do
+          echo $j > /sys/class/gpio/unexport
+        done
+        break
+      fi
+    done
+
+
+  #unregister the GPIO expander
+    echo $GPIOExpanderIICAddress > /sys/bus/i2c/devices/i2c-$IICBusNumber/delete_device
+
+    exit 0
+}
