@@ -1,0 +1,15 @@
+#!/bin/sh /etc/rc.common
+#Script to initiate the IIC bus via bitbang on a GL.iNet GL-MT300N-V2
+
+START=70
+STOP=70
+
+boot() {
+  #register the IIC-bus as bitbanging 4 SDA and 5 SDL
+    insmod i2c-gpio-custom bus0=0,5,4
+}
+
+
+stop() {
+    rmmod i2c-gpio-custom
+}
