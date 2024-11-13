@@ -1,5 +1,5 @@
 # nGcontrol
-openWRT package to have an overview and basic control about connected UMTS/GSM/LTE USB-dongles. The web interface gives an overview of certain connection parameters as well as provides some basic control to Stop, Start or Restart a dongle. See attached screen shot for an example providing all three states of information.
+openWRT package for an overview and basic control of connected UMTS/GSM/LTE USB-dongles. The web interface gives an overview of certain connection parameters as well as provides some basic control to Stop, Start or Restart a dongle. See attached screen shot for an example providing all three states of information.
 
 Since sometimes, the dongles do not respond anymore, the mwan3-custom script was modified to "auto-reanimate" the dongle (i.e. turn it off and on physically). The maximum number of such retry attempts can be configured. Also, this script changes the behaviour of the WAN and USB LED of a D-Link DIR-825 router (should be quite customizable for any router).
 
